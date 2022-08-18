@@ -20,7 +20,7 @@ services:
     ports:
       - "8080:8080"
     command: bash -c "
-      dbt docs generate && dbt docs serve
+      dbt deps && dbt docs generate && dbt docs serve
       "
 
   postgres_db:
