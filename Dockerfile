@@ -6,6 +6,9 @@ RUN apt-get update && \
 
 COPY ginlong_data_processing ginlong_data_processing
 COPY requirements.txt requirements.txt 
+RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 WORKDIR ginlong_data_processing/
+RUN adduser initial_load_user
+RUN adduser dbt_execution_user
