@@ -1,4 +1,4 @@
-ginlong_data_processing:
+data_management_exercises:
   target: dev
   outputs:
     dev:

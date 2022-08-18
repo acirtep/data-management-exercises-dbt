@@ -2,11 +2,44 @@ version: '3.2'
 
 services:
   dbt_app:
+    container_name: dbt_dm_app
     restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - env/env_vars.env
-    entrypoint:
-      "dbt test"
+      - env/example_env_vars.env
+    depends_on:
+      - postgres_db
+    links:
+      - postgres_db:postgres_db
+    networks:
+      - app-tier
+    volumes:
+      - ./data_management_exercises:/app/data_management_exercises
+    ports:
+      - "8080:8080"
+    command: bash -c "
+      dbt deps && dbt docs generate && dbt docs serve
+      "
+
+  postgres_db:
+    container_name: dbt_dm_pg
+    image: postgres:14.0
+    env_file:
+      - env/example_env_vars.env
+    environment:
+      POSTGRES_PASSWORD: dbt_pwd
+      POSTGRES_DB: dbt_db
+      POSTGRES_USER: dbt_user
+    privileged: true
+    ports:
+      - "5433:5432"
+    networks:
+      - app-tier
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+
+networks:
+  app-tier:
+    driver: bridge
