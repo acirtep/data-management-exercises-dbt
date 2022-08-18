@@ -1,0 +1,43 @@
+
+version: 2
+
+models:
+  - name: event_user_signup
+    description: "Table having the user sign-up events"
+    config:
+      materialized: incremental
+    columns:
+      - name: event_sk
+        tests:
+          - not_null
+      - name: username
+        tests:
+          - not_null
+      - name: email_address
+        tests:
+          - not_null
+      - name: first_name
+        tests:
+          - not_null
+      - name: last_name
+        tests:
+          - not_null
+      - name: created_by
+        tests:
+          - not_null
+      - name: created_timestamp
+        tests:
+          - not_null
+      - name: updated_by
+        tests:
+          - not_null
+      - name: updated_timestamp
+        tests:
+          - not_null
+      - name: dbt_inserted_datetime
+        tests:
+          - not_null
+      - name: dbt_execution_id
+        tests:
+          - not_null
+ 

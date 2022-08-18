@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   dbt_app:
-    container_name: dbt_app
+    container_name: dbt_dm_app
     restart: on-failure
     build:
       context: .
@@ -16,14 +16,15 @@ services:
     networks:
       - app-tier
     volumes:
-      - ./ginlong_data_processing:/app/ginlong_data_processing
+      - ./data_management_exercises:/app/data_management_exercises
     ports:
       - "8080:8080"
-    entrypoint:
-      "dbt docs serve"
+    command: bash -c "
+      dbt docs generate && dbt docs serve
+      "
 
   postgres_db:
-    container_name: dbt_pg
+    container_name: dbt_dm_pg
     image: postgres:14.0
     env_file:
       - env/example_env_vars.env

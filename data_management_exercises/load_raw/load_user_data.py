@@ -26,29 +26,26 @@ def get_initial_user_data():
     return user_list
 
 
-def get_updated_data(initial_user_data):
+def add_updated_attributes(user_data_df):
     fake_user = Faker()
-    user_list = []
-    for user in initial_user_data:
-        user_list.append(
-                        {
-                    "username": user['username'],
-                    "email_address": user['email_address'],
-                    "first_name": user['first_name'],
-                    "last_name": fake_user.last_name(),
-                    "created_by": "api_v22",
-                    "created_timestamp": user['created_timestamp'],
-                    "updated_by": "api_v23",
-                    "updated_timestamp": fake_user.date_time_between('-5d').strftime("%Y-%m-%d %H:%M:%S")
-            }
+    last_name_list = []
+    updated_timestamp_list = []
+    for _ in range(5):
+        last_name_list.append(fake_user.last_name())
+        updated_timestamp_list.append(
+            fake_user.date_time_between('-1d').strftime("%Y-%m-%d %H:%M:%S")
         )
-    return user_list
+    user_data_df['last_name'] = last_name_list
+    user_data_df['updated_timestamp'] = updated_timestamp_list
+    user_data_df['updated_by'] = 'api_v23'
+
+    return user_data_df
 
 
 def initial_load_raw_user_data():
     initial_user_data = get_initial_user_data()
     initial_user_data_df = pandas.DataFrame(initial_user_data)
-    initial_user_data_df['inserted_datetime'] = datetime.now() - timedelta(1)
+    initial_user_data_df['load_datetime'] = datetime.now() - timedelta(1)
     pg_conn = get_pg_conn()
     initial_user_data_df.to_sql(
         'raw_user_data',
@@ -58,14 +55,15 @@ def initial_load_raw_user_data():
     )
     pg_conn.close()
 
-    return initial_user_data[12:17]
 
-
-def load_updated_data(initial_user_data):
-    user_data = get_updated_data(initial_user_data)
-    user_data_df = pandas.DataFrame(user_data)
-    user_data_df['inserted_datetime'] = datetime.now()
+def load_updated_data():
     pg_conn = get_pg_conn()
+    user_data_df = pandas.read_sql(
+        'select username, email_address, first_name, created_by, created_timestamp \
+        from public.raw_user_data limit 5;', pg_conn)
+    user_data_df = add_updated_attributes(user_data_df)
+    user_data_df['load_datetime'] = datetime.now()
+    
     user_data_df.to_sql(
         'raw_user_data',
         con=pg_conn,
@@ -74,9 +72,3 @@ def load_updated_data(initial_user_data):
     )
     pg_conn.close()
 
-
-if __name__ == "__main__":
-    print("loading initial data")
-    initial_user_data = initial_load_raw_user_data()
-    print("loading updated data")
-    load_updated_data(initial_user_data)

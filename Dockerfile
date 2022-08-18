@@ -4,11 +4,9 @@ WORKDIR app/
 RUN apt-get update && \
       apt-get -y install libpq-dev python3-dev gcc
 
-COPY ginlong_data_processing ginlong_data_processing
+COPY data_management_exercises data_management_exercises
 COPY requirements.txt requirements.txt 
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-WORKDIR ginlong_data_processing/
-RUN adduser initial_load_user
-RUN adduser dbt_execution_user
+WORKDIR data_management_exercises/
