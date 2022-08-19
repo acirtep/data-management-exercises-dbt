@@ -2,42 +2,53 @@
 version: 2
 
 models:
-  - name: event_user_signup
+  - name: fact_user_registration
     description: "Table having the user sign-up events"
     config:
       materialized: incremental
     columns:
       - name: event_sk
+        description: "User registration event surrogate key"
         tests:
           - not_null
       - name: username
+        description: "Username"
         tests:
           - not_null
       - name: email_address
+        description: "Email address used in the registration form"
         tests:
           - not_null
       - name: first_name
+        description: "The first name of the user"
         tests:
           - not_null
       - name: last_name
+        description: "The last name of the user"
         tests:
           - not_null
       - name: created_by
+        description: "User, process or version which created the record"
         tests:
           - not_null
       - name: created_timestamp
+        description: "User first registration time"
         tests:
           - not_null
       - name: updated_by
+        description: "User, process or version which updated the record"
         tests:
           - not_null
       - name: updated_timestamp
+        description: "Update time of the record in the source system"
         tests:
           - not_null
-      - name: dbt_inserted_datetime
+      - name: dbt_inserted_timestamp
+        description: "Insert time of the record in the integration layer"
         tests:
           - not_null
       - name: dbt_execution_id
+        description: "DBT invocation id of the run"
         tests:
           - not_null
  
