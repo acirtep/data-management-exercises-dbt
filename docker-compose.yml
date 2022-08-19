@@ -19,9 +19,19 @@ services:
       - ./data_management_exercises:/app/data_management_exercises
     ports:
       - "8080:8080"
-    command: bash -c "
-      dbt deps && dbt docs generate && dbt docs serve
-      "
+    command: 
+      - bash
+      - -c
+      - |
+        python /app/data_management_exercises/load_raw/create_raw_layer.py
+        python /app/data_management_exercises/load_raw/initial_load_user_data.py
+        dbt deps
+        dbt run --full-refresh --model fact_user_registration
+        python /app/data_management_exercises/load_raw/load_updated_user_data.py
+        dbt run --model fact_user_registration
+        dbt docs generate
+        dbt docs serve
+      
 
   postgres_db:
     container_name: dbt_dm_pg

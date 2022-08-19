@@ -14,12 +14,11 @@ select
     cast(created_timestamp as timestamp) created_timestamp,
     cast(updated_by as varchar(10)) updated_by,
     cast(updated_timestamp as timestamp) updated_timestamp,
-    current_timestamp as dbt_inserted_datetime,
-    '{{ invocation_id }}' as dbt_execution_id
-from public.raw_user_data
+    {{ get_audit_columns() }}
+from {{ source ('raw_layer', 'raw_user_registration_events') }}
 
 {% if is_incremental() %}
 
-  where cast(load_datetime as date) = cast(current_date as date)
+  where cast(load_timestamp as date) = cast(current_date as date)
 
 {% endif %}
