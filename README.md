@@ -17,24 +17,14 @@ Now you should be able to have 2 services running:
 
 ## Connecting to the python service
 
-`docker exec -it dbt_dm_app bash`
+`docker exec -it dbt_dm_app ???`
 
-Now you will be in the terminal of the dbt_dm_app container and be able to run:
+Replace ??? with
 - python
 - ipython
 - dbt
-
-### ipython
-
-```
-
-
-```
-
-### Execute dbt
-```
-
-```
+- bash
+depending what you want to execute
 
 ## Connecting to the postgres database
 
@@ -57,4 +47,4 @@ dbt_db=# select dbt_execution_id, dbt_inserted_timestamp, count(*) from integrat
 The act of loading the data in such a way that both the data and the process can be part of an audit.
 It also helps in impact analysis, debugging and quality control.
 
-Article available at: .
+Article available at: https://ownyourdata.ai/wp/a-way-to-ensure-auditability-in-data-processing/.
