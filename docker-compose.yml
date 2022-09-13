@@ -26,11 +26,11 @@ services:
         python /app/data_management_exercises/load_raw/create_raw_layer.py
         python /app/data_management_exercises/load_raw/initial_load_user_data.py
         dbt deps
-        dbt run --full-refresh --model fact_user_registration
+        dbt run --full-refresh --model fact_user_registration --target postgres
         python /app/data_management_exercises/load_raw/load_updated_user_data.py
-        dbt run --model fact_user_registration
-        dbt docs generate
-        dbt docs serve
+        dbt run --model fact_user_registration --target postgres
+        dbt docs generate --target postgres
+        dbt docs serve --target postgres
       
 
   postgres_db:
@@ -40,7 +40,7 @@ services:
       - env/example_env_vars.env
     environment:
       POSTGRES_PASSWORD: dbt_pwd
-      POSTGRES_DB: dbt_db
+      POSTGRES_DB: poc_dbt
       POSTGRES_USER: dbt_user
     privileged: true
     ports:

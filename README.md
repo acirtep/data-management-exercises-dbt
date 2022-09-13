@@ -28,13 +28,13 @@ depending what you want to execute
 
 ## Connecting to the postgres database
 
-Execute `docker exec -it dbt_dm_pg psql -U dbt_user -d dbt_db` and you will be able to run SQL:
+Execute `docker exec -it dbt_dm_pg psql -U dbt_user -d poc_dbt` and you will be able to run SQL:
 ```
-data-management-exercises-dbt % docker exec -it dbt_dm_pg psql -U dbt_user -d dbt_db
+data-management-exercises-dbt % docker exec -it dbt_dm_pg psql -U dbt_user -d poc_dbt
 psql (14.0 (Debian 14.0-1.pgdg110+1))
 Type "help" for help.
 
-dbt_db=# select dbt_execution_id, dbt_inserted_timestamp, count(*) from integration_layer.fact_user_registration group by 1,2 order by 2;
+poc_dbt=# select dbt_execution_id, dbt_inserted_timestamp, count(*) from integration_layer.fact_user_registration group by 1,2 order by 2;
            dbt_execution_id           |    dbt_inserted_timestamp     | count 
 --------------------------------------+-------------------------------+-------
  52f445a2-66f2-4947-abfd-e54a7a3cbfb4 | 2022-08-19 12:20:45.964459+00 |    25
@@ -48,3 +48,18 @@ The act of loading the data in such a way that both the data and the process can
 It also helps in impact analysis, debugging and quality control.
 
 Article available at: https://ownyourdata.ai/wp/a-way-to-ensure-auditability-in-data-processing/.
+
+# How to run with snowflake
+1. Connect to the dbt_dm_app container: `docker exec -it dbt_dm_app bash`
+2. Export Snowflake env vars
+export SNOWFLAKE_ACCOUNT=???
+export SNOWFLAKE_USER=???
+export SNOWFLAKE_PWD=???
+3. Initial load from ipython: 
+```
+ipython
+from load_raw.initial_load_user_data import load_to_snowflake
+load_to_snowflake()
+```
+4. Dbt full refresh: `dbt run --full-refresh --model fact_user_registration --target snowflake`
+
