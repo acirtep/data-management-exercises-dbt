@@ -1,6 +1,6 @@
 from faker import Faker
 import pandas
-from utils import get_pg_conn
+from utils import get_pg_conn, get_snowflake_conn
 from datetime import datetime, timedelta
 
 
@@ -23,11 +23,15 @@ def get_initial_user_data():
         )
     return user_list
 
-
-if __name__ == "__main__":
+def get_initial_user_df():
     initial_user_data = get_initial_user_data()
     initial_user_data_df = pandas.DataFrame(initial_user_data)
     initial_user_data_df['load_timestamp'] = datetime.now() - timedelta(1)
+    return initial_user_data_df
+
+
+if __name__ == "__main__":
+    initial_user_data_df = get_initial_user_df()
     pg_conn = get_pg_conn()
     initial_user_data_df.to_sql(
         name='raw_user_registration_events',
@@ -37,3 +41,16 @@ if __name__ == "__main__":
         index=False
     )
     pg_conn.close()
+
+
+def load_to_snowflake():
+    initial_user_data_df = get_initial_user_df()
+    snowflake_conn = get_snowflake_conn()
+    initial_user_data_df.to_sql(
+        name='raw_user_registration_events',
+        schema='raw_layer',
+        con=snowflake_conn,
+        if_exists='replace',
+        index=False
+    )
+    snowflake_conn.close()

@@ -3,7 +3,7 @@ version: 2
 
 sources:
   - name: raw_layer
-    database: dbt_db
+    database: poc_dbt
     schema: raw_layer
     tables:
       - name: raw_user_registration_events

@@ -51,4 +51,3 @@ models:
         description: "DBT invocation id of the run"
         tests:
           - not_null
- 

@@ -1,7 +1,7 @@
 data_management_exercises:
   target: dev
   outputs:
-    dev:
+    postgres:
       type: postgres
       host: "{{ env_var('DBT_POSTGRES_HOST') }}"
       user: "{{ env_var('DBT_POSTGRES_USER') }}"
@@ -12,3 +12,11 @@ data_management_exercises:
       threads: 1
       keepalives_idle: 0 # default 0, indicating the system default. See below
       connect_timeout: 60 # default 10 seconds
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PWD') }}"
+      database: "POC_DBT"
+      warehouse: "COMPUTE_WH"
+      schema: integration_layer
