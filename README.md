@@ -49,6 +49,9 @@ It also helps in impact analysis, debugging and quality control.
 
 Article available at: https://ownyourdata.ai/wp/a-way-to-ensure-auditability-in-data-processing/.
 
+## Versioning
+Article about data versioning: https://ownyourdata.ai/wp/what-is-data-versioning-and-3-ways-to-implement-it/ 
+
 # How to run with snowflake
 1. Connect to the dbt_dm_app container: `docker exec -it dbt_dm_app bash`
 2. Export Snowflake env vars
